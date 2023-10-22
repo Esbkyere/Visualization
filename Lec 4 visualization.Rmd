@@ -1,0 +1,132 @@
+---
+title: "Untitled"
+author: "Esther Kyeremah"
+date: "2023-10-22"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+library(ggridges)
+```
+
+```{r}
+weather_df = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728", "USW00022534", "USS0023B17S"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2021-01-01",
+    date_max = "2022-12-31") |>
+  mutate(
+    name = recode(
+      id, 
+      USW00094728 = "CentralPark_NY", 
+      USW00022534 = "Molokai_HI",
+      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) |>
+  select(name, id, everything())
+```
+
+
+##Scatterplts!!
+Create my first scatterplot
+
+```{r}
+weather_df |>
+ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point()
+```
+
+Save and edit a plot object
+```{r}
+weather_plot=
+weather_df |>
+ggplot(aes(x = tmin, y = tmax)) 
+
+weather_plot + geom_point()
+```
+
+##Advanced scatterplot..
+Start with th 
+```{r}
+weather_df |>
+ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+
+What aout the aes
+```{r}
+weather_df |>
+ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name)) +
+  geom_smooth()
+```
+
+Let's facet some things!!
+```{r}
+weather_df |>
+ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name)) +
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ name)
+```
+
+```{r}
+weather_df |>
+ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name)) +
+  geom_smooth(se = FALSE) +
+  facet_grid(name ~ .)
+```
+
+Define alpha(here it means size/transparency) level
+```{r}
+weather_df |>
+ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .2, size = .3) +
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ name)
+
+```
+ Lets try a new pkot with date
+ 
+```{r}
+weather_df |>
+ggplot(aes(x = date, y = tmax, color = name)) + 
+  geom_point(aes(size = prcp),alpha = .5) +
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ name)
+```
+ 
+ How many geoms have to exist?
+ you can have whatever geoms you want but 
+ below may not be useful
+ 
+```{r}
+weather_df |>
+ggplot(aes(x = date, y = tmax, color = name)) + 
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ name)
+```
+ 
+You can use a neat geom! this is overkill for a scatterplot with 1000 observations but for very large datasets this helps tbecause changing your alpha in those cases sometimes doesnt help to see
+
+
+```{r}
+weather_df |>
+ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_hex()
+```
+
+adding on geom density
+```{r}
+weather_df |>
+ggplot(aes(x = tmin, y = tmax)) + 
+geom_density2d() +
+geom_point(alpha = .3)
+```
+
+
+
