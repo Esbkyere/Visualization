@@ -166,7 +166,7 @@ theme(legend.position = "bottom")
 ``` r
 library(tidyverse)
 
-knitr:: opts_chunk$set(
+knitr::opts_chunk$set(
   fig.width = 6,
   gif.asp = .6,
   out.width = "90%"
@@ -180,7 +180,89 @@ options(
   ggplot2.continuous.fill = "viridis"
 )
 
-scale_colour_discrete = scale_color_viridis_d()
-scale_fill_discrete = scale_fill_viridis_d()
-)
+scale_colour_discrete = scale_color_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
 ```
+
+## Data args in `geom`
+
+``` r
+ central_park = 
+  weather_df %>% 
+  filter(name == "CentralPark_NY")
+
+
+Molokai = 
+   weather_df %>% 
+  filter(name == "Molokai_HI")
+
+
+ggplot(data = Molokai, aes(x = date, y = tmax, color = name)) +
+geom_point() +
+  geom_line()
+```
+
+    ## Warning: Removed 1 rows containing missing values (`geom_point()`).
+
+![](Lec-5-visualization-2_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+if i want to use one data set for geom point and another dataset for
+geom line you can specify
+
+``` r
+ggplot(data = Molokai, aes(x = date, y = tmax, color = name)) +
+geom_point() +
+geom_line(data = central_park)
+```
+
+    ## Warning: Removed 1 rows containing missing values (`geom_point()`).
+
+![](Lec-5-visualization-2_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+\## `patchmark`
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, fill = name)) +
+geom_density(alpha = .5) +
+facet_grid(. ~ name)
+```
+
+    ## Warning: Removed 17 rows containing non-finite values (`stat_density()`).
+
+![](Lec-5-visualization-2_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+what happens when you want multipanel plots but cannot facet?
+
+``` r
+tmin_tmax =
+  weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = .5) +
+  theme(legend.position = "none") 
+
+ prcp_dens_plot =
+  weather_df %>% 
+  filter(prcp > 0) %>% 
+  ggplot(aes(x = prcp, fill = name)) +
+  geom_density(alpha = .5) +
+  theme(legend.position = "none") 
+ 
+ tmax_date_p =
+  weather_df %>% 
+  filter(prcp > 0) %>% 
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_point() +
+geom_smooth(se = FALSE) +
+  theme(legend.position = "none") 
+
+library(patchwork)
+tmax_date_p + prcp_dens_plot
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
+
+    ## Warning: Removed 2 rows containing non-finite values (`stat_smooth()`).
+
+    ## Warning: Removed 2 rows containing missing values (`geom_point()`).
+
+![](Lec-5-visualization-2_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
