@@ -2,7 +2,7 @@
 title: "Visualization 2"
 author: "Esther Kyeremah"
 date: "2023-10-23"
-output: html_document
+output: github_document
 ---
 
 ```{r}
@@ -90,3 +90,47 @@ weather_df %>%
       name = "Location",
    discrete = TRUE)
 ```
+
+##Themes 
+The theme legend position has to come after youve chosen to use theme_minmal..other theems are theme_classic etc... you can also use ggthemes::(and then pick from he options)
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = .5) +
+  labs( 
+    title = "Temprerature plot",
+    x = "Minimum daily temperature(C)",
+    y = "Maximum daily temperature(C)",
+    caption = "Data from rnoaa package; temperatures in 2017." ) +
+    viridis::scale_color_viridis(
+      name = "Location",
+   discrete = TRUE) +
+theme_minimal() +
+theme(legend.position = "bottom")
+```
+
+##Setting options
+
+```{r, eval = FALSE}
+library(tidyverse)
+
+knitr:: opts_chunk$set(
+  fig.width = 6,
+  gif.asp = .6,
+  out.width = "90%"
+)
+
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.comtinuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_color_viridis_d()
+scale_fill_discrete = scale_fill_viridis_d()
+)
+```
+
+
