@@ -1,4 +1,4 @@
-Untitled
+Visualization with ggplot 1
 ================
 Esther Kyeremah
 2023-10-22
@@ -231,3 +231,146 @@ geom_point(alpha = .3)
     ## Warning: Removed 17 rows containing missing values (`geom_point()`).
 
 ![](Lec-4-visualization_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+\##univariate plots
+
+``` r
+weather_df |>
+ggplot(aes(x = tmin)) +
+  geom_histogram()
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 17 rows containing non-finite values (`stat_bin()`).
+
+![](Lec-4-visualization_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+when you want to add color
+
+``` r
+weather_df |>
+ggplot(aes(x = tmin, color = name)) +
+  geom_histogram()
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 17 rows containing non-finite values (`stat_bin()`).
+
+![](Lec-4-visualization_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+DOESNT LOOK TOO GOOD COS THEYRE JUST STACKED ON EACH OTHER AND THE COLOR
+IS ON THE OUTSIDE OF THE BAR
+
+``` r
+weather_df |>
+ggplot(aes(x = tmin, fill = name)) +
+  geom_histogram(position = "dodge")
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 17 rows containing non-finite values (`stat_bin()`).
+
+![](Lec-4-visualization_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+EVEN THOUGH THEYRE NOT REALLY STACKED THE DODGE DOESNT STILL MAKE IT TOO
+REPRESNTABLE
+
+so..
+
+``` r
+weather_df |>
+ggplot(aes(x = tmin, fill = name)) +
+geom_histogram() +
+  facet_grid(. ~ name)
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 17 rows containing non-finite values (`stat_bin()`).
+
+![](Lec-4-visualization_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+Let’s try a new geometry! this one makes you see more or less bumps in
+the histogram
+
+``` r
+weather_df |>
+ggplot(aes(x = tmin, fill = name)) +
+geom_density(alpha = .3, adjust = .5)
+```
+
+    ## Warning: Removed 17 rows containing non-finite values (`stat_density()`).
+
+![](Lec-4-visualization_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+
+Lets try box plots
+
+``` r
+weather_df |>
+ggplot(aes(x = name, y = tmin)) +
+geom_boxplot()
+```
+
+    ## Warning: Removed 17 rows containing non-finite values (`stat_boxplot()`).
+
+![](Lec-4-visualization_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
+Trendy plots
+
+``` r
+weather_df |>
+ggplot(aes(x = name, y = tmin, fill = name)) +
+geom_violin( alpha = .5) +
+stat_summary(fun = "median")
+```
+
+    ## Warning: Removed 17 rows containing non-finite values (`stat_ydensity()`).
+
+    ## Warning: Removed 17 rows containing non-finite values (`stat_summary()`).
+
+    ## Warning: Removed 3 rows containing missing values (`geom_segment()`).
+
+![](Lec-4-visualization_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+
+Ridge plots\_\_ the most popular plot of 2017
+
+``` r
+weather_df |>
+ggplot(aes(x = tmax, y = name, fill = name)) +
+geom_density_ridges()
+```
+
+    ## Picking joint bandwidth of 1.54
+
+    ## Warning: Removed 17 rows containing non-finite values
+    ## (`stat_density_ridges()`).
+
+![](Lec-4-visualization_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+
+# Save and embed
+
+Lets save a scatterplot
+
+``` r
+weather_save = 
+weather_df |>
+ggplot(aes(x = tmin, y = tmax, color = name)) +
+geom_point(alpha = .5)
+
+ggsave("./results/weather_save.pdf", weather_save, width = 8, height = 5)
+```
+
+    ## Warning: Removed 17 rows containing missing values (`geom_point()`).
+
+What about embedding Embed at different size
+
+``` r
+weather_save
+```
+
+    ## Warning: Removed 17 rows containing missing values (`geom_point()`).
+
+![](Lec-4-visualization_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->

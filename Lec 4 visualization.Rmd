@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Visualization with ggplot 1"
 author: "Esther Kyeremah"
 date: "2023-10-22"
 output: github_document
@@ -128,5 +128,93 @@ geom_density2d() +
 geom_point(alpha = .3)
 ```
 
+##univariate plots
+
+```{r}
+weather_df |>
+ggplot(aes(x = tmin)) +
+  geom_histogram()
+```
+
+when you want to add color
+
+```{r}
+weather_df |>
+ggplot(aes(x = tmin, color = name)) +
+  geom_histogram()
+```
+
+DOESNT LOOK TOO GOOD COS THEYRE JUST STACKED ON EACH OTHER AND THE COLOR IS ON THE OUTSIDE OF THE BAR
+
+```{r}
+weather_df |>
+ggplot(aes(x = tmin, fill = name)) +
+  geom_histogram(position = "dodge")
+```
+
+EVEN THOUGH THEYRE NOT REALLY STACKED THE DODGE DOESNT STILL MAKE IT TOO REPRESNTABLE
+
+so..
+
+```{r}
+weather_df |>
+ggplot(aes(x = tmin, fill = name)) +
+geom_histogram() +
+  facet_grid(. ~ name)
+```
+
+Let's try a new geometry! 
+this one makes you see more or less bumps in the histogram
+```{r}
+weather_df |>
+ggplot(aes(x = tmin, fill = name)) +
+geom_density(alpha = .3, adjust = .5)
+```
+
+
+Lets try box plots
+
+```{r}
+weather_df |>
+ggplot(aes(x = name, y = tmin)) +
+geom_boxplot()
+```
+
+
+Trendy plots
+```{r}
+weather_df |>
+ggplot(aes(x = name, y = tmin, fill = name)) +
+geom_violin( alpha = .5) +
+stat_summary(fun = "median")
+```
+
+Ridge plots__ the most popular plot of 2017
+```{r}
+weather_df |>
+ggplot(aes(x = tmax, y = name, fill = name)) +
+geom_density_ridges()
+```
+
+# Save and embed
+
+Lets save a scatterplot
+
+```{r}
+weather_save = 
+weather_df |>
+ggplot(aes(x = tmin, y = tmax, color = name)) +
+geom_point(alpha = .5)
+
+ggsave("./results/weather_save.pdf", weather_save, width = 8, height = 5)
+
+```
+
+What about embedding
+Embed at different size
+
+```{r, fig.width=6, fig.height=3 }
+weather_save
+```
 
 
