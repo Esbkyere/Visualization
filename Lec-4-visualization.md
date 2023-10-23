@@ -1,4 +1,4 @@
-Visualization with ggplot 1
+Visualization with ggplot
 ================
 Esther Kyeremah
 2023-10-22

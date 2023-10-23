@@ -1,5 +1,5 @@
 ---
-title: "Visualization with ggplot 1"
+title: "Visualization with ggplot "
 author: "Esther Kyeremah"
 date: "2023-10-22"
 output: github_document
